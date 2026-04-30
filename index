@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>十四經脈圖鑑</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;600;700&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f0e8;
+    --bg2: #fffdf7;
+    --border: #d4c4a0;
+    --gold: #b8860b;
+    --gold-light: #d4a017;
+    --text: #2c1f0e;
+    --text2: #6b5a3e;
+    --accent: #8b0000;
+    --panel-bg: rgba(255,253,247,0.95);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: 'Noto Serif TC', serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    background-image:
+      radial-gradient(ellipse at 20% 10%, rgba(184,134,11,0.06) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 90%, rgba(139,0,0,0.04) 0%, transparent 50%);
+  }
+
+header {
+text-align: center;
+padding: 2.5rem 2rem 1.5rem;
+border-bottom: 1px solid var(–border);
+background: linear-gradient(to bottom, #fffdf7, var(–bg));
+}
+header h1 {
+font-size: 2.8rem;
+font-weight: 300;
+letter-spacing: 0.25em;
+color: var(–gold);
+text-shadow: 0 1px 2px rgba(184,134,11,0.15);
+margin-bottom: 0.4rem;
+}
+header p {
+font-family: ‘Noto Sans TC’, sans-serif;
+font-size: 0.9rem;
+color: var(–text2);
+letter-spacing: 0.15em;
+}
+
+.layout {
+display: grid;
+grid-template-columns: 260px 1fr 320px;
+gap: 0;
+height: calc(100vh - 120px);
+}
+
+/* ─── 左欄：經脈列表 ─── */
+.sidebar {
+border-right: 1px solid var(–border);
+overflow-y: auto;
+background: var(–panel-bg);
+padding: 1.2rem 0.8rem;
+}
+.sidebar::-webkit-scrollbar { width: 5px; }
+.sidebar::-webkit-scrollbar-thumb { background: var(–border); border-radius: 5px; }
+
+.group-label {
+font-family: ‘Noto Sans TC’, sans-serif;
+font-size: 0.72rem;
+font-weight: 500;
+color: var(–text2);
+letter-spacing: 0.18em;
+padding: 0.8rem 0.8rem 0.4rem;
+text-transform: uppercase;
+border-top: 1px solid var(–border);
+margin-top: 0.6rem;
+}
+.group-label:first-child { border-top: none; margin-top: 0; }
+
+.m-btn {
+display: flex;
+align-items: center;
+gap: 0.7rem;
+width: 100%;
+padding: 0.7rem 0.9rem;
+background: transparent;
+border: none;
+border-radius: 6px;
+cursor: pointer;
+text-align: left;
+transition: all 0.2s;
+font-family: ‘Noto Serif TC’, serif;
+}
+.m-btn:hover { background: rgba(184,134,11,0.08); }
+.m-btn.active { background: rgba(184,134,11,0.14); }
+.m-dot {
+width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+box-shadow: 0 0 5px currentColor;
+}
+.m-name { font-size: 0.95rem; font-weight: 600; color: var(–text); }
+.m-sub  { font-size: 0.72rem; color: var(–text2); font-family: ‘Noto Sans TC’, sans-serif; }
+
+/* ─── 中央：人體圖 ─── */
+.body-panel {
+display: flex;
+align-items: center;
+justify-content: center;
+background: linear-gradient(160deg, #fffdf7 0%, #f7f0e3 100%);
+position: relative;
+overflow: hidden;
+}
+.body-panel::before {
+content: ‘’;
+position: absolute;
+inset: 0;
+background-image: radial-gradient(circle at center, rgba(184,134,11,0.04) 0%, transparent 70%);
+}
+.body-wrap {
+position: relative;
+width: 320px;
+height: 680px;
+}
+#bodySvg {
+width: 100%;
+height: 100%;
+filter: drop-shadow(0 8px 32px rgba(184,134,11,0.12));
+}
+
+/* ─── 右欄：詳細資訊 ─── */
+.detail {
+border-left: 1px solid var(–border);
+background: var(–panel-bg);
+padding: 2rem 1.5rem;
+overflow-y: auto;
+}
+.detail::-webkit-scrollbar { width: 5px; }
+.detail::-webkit-scrollbar-thumb { background: var(–border); border-radius: 5px; }
+
+.detail-head {
+margin-bottom: 1.5rem;
+padding-bottom: 1.2rem;
+border-bottom: 1px solid var(–border);
+}
+.detail-head h2 {
+font-size: 1.6rem;
+font-weight: 700;
+color: var(–text);
+margin-bottom: 0.3rem;
+letter-spacing: 0.08em;
+}
+.badge {
+display: inline-block;
+padding: 0.15rem 0.7rem;
+border-radius: 20px;
+font-family: ‘Noto Sans TC’, sans-serif;
+font-size: 0.75rem;
+font-weight: 500;
+letter-spacing: 0.06em;
+}
+.badge.yin  { background: #ffe0e0; color: #8b0000; }
+.badge.yang { background: #e0eeff; color: #00368b; }
+.badge.qi   { background: #f0e6ff; color: #5a008b; }
+
+.info-row {
+margin-bottom: 1.2rem;
+}
+.info-row .lbl {
+font-family: ‘Noto Sans TC’, sans-serif;
+font-size: 0.75rem;
+color: var(–text2);
+letter-spacing: 0.08em;
+text-transform: uppercase;
+margin-bottom: 0.3rem;
+display: flex;
+align-items: center;
+gap: 0.4rem;
+}
+.info-row .lbl::before {
+content: ‘’;
+display: inline-block;
+width: 14px; height: 2px;
+background: var(–gold);
+}
+.info-row .val {
+font-size: 0.95rem;
+color: var(–text);
+line-height: 1.7;
+font-family: ‘Noto Sans TC’, sans-serif;
+}
+
+.acupoints-grid {
+display: flex;
+flex-wrap: wrap;
+gap: 0.4rem;
+margin-top: 0.3rem;
+}
+.acu-tag {
+display: inline-block;
+padding: 0.2rem 0.6rem;
+background: rgba(184,134,11,0.08);
+border: 1px solid rgba(184,134,11,0.2);
+border-radius: 4px;
+font-size: 0.82rem;
+color: var(–gold);
+font-family: ‘Noto Sans TC’, sans-serif;
+transition: all 0.15s;
+cursor: default;
+}
+.acu-tag:hover {
+background: rgba(184,134,11,0.18);
+color: var(–text);
+}
+
+/* Acu-point pulse */
+@keyframes pulse {
+0%   { r: 4; opacity: 0.9; }
+50%  { r: 6; opacity: 0.5; }
+100% { r: 4; opacity: 0.9; }
+}
+.acu-pulse { animation: pulse 2s ease-in-out infinite; }
+
+/* path draw-on */
+@keyframes drawPath {
+from { stroke-dashoffset: 2000; }
+to   { stroke-dashoffset: 0; }
+}
+.meridian-line {
+stroke-dasharray: 2000;
+stroke-dashoffset: 2000;
+animation: drawPath 1.2s ease-out forwards;
+}
+</style>
+
+</head>
+<body>
+
+<header>
+  <h1>十四經脈圖鑑</h1>
+  <p>點擊左欄任一經脈，查看走向、穴道與分布</p>
+</header>
+
+<div class="layout">
+
+  <!-- 左欄 -->
+
+  <div class="sidebar" id="sidebar"></div>
+
+  <!-- 中央人體圖 -->
+
+  <div class="body-panel">
+    <div class="body-wrap">
+      <svg id="bodySvg" viewBox="0 0 320 680" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="skinGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#f5deb3;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#d2a679;stop-opacity:1" />
+          </linearGradient>
+          <linearGradient id="skinDark" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:#c8956c;stop-opacity:0.6" />
+            <stop offset="100%" style="stop-color:#c8956c;stop-opacity:0" />
+          </linearGradient>
+          <filter id="bodyGlow">
+            <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#b8860b" flood-opacity="0.12"/>
+          </filter>
+        </defs>
+
+```
+    <!-- ─── 人體解剖輪廓 ─── -->
+    <g id="bodyOutline" filter="url(#bodyGlow)">
+      <!-- 頭部 -->
+      <ellipse cx="160" cy="52" rx="34" ry="42" fill="url(#skinGrad)" stroke="#c8956c" stroke-width="1.2"/>
+      <!-- 頸部 -->
+      <rect x="148" y="88" width="24" height="22" rx="4" fill="url(#skinGrad)" stroke="#c8956c" stroke-width="1"/>
+      <!-- 鎖骨/肩膀 -->
+      <path d="M 90 115 Q 100 108, 160 108 Q 220 108, 230 115 L 232 125 Q 220 118, 160 118 Q 100 118, 88 125 Z"
+            fill="url(#skinGrad)" stroke="#c8956c" stroke-width="1"/>
+      <!-- 軀幹 -->
+      <path d="M 90 115 L 88 280 Q 90 292, 110 295 L 145 298 L 145 310 L 175 310 L 175 298 L 210 295 Q 230 292, 232 280 L 230 115 Q 220 108, 160 108 Q 100 108, 90 115 Z"
+            fill="url(#skinGrad)" stroke="#c8956c" stroke-width="1.2"/>
+      <!-- 胸廓線條 -->
+      <path d="M 110 130 Q 160 125, 210 130" fill="none" stroke="#c8a07a" stroke-width="0.8" opacity="0.5"/>
+      <path d="M 108 148 Q 160 143, 212 148" fill="none" stroke="#c8a07a" stroke-width="0.8" opacity="0.4"/>
+      <!-- 腹部輪廓線 -->
+      <line x1="160" y1="118" x2="160" y2="295" stroke="#c8a07a" stroke-width="0.7" opacity="0.35"/>
+      <!-- 肚臍 -->
+      <ellipse cx="160" cy="220" rx="5" ry="3.5" fill="none" stroke="#c8956c" stroke-width="1" opacity="0.6"/>
+      <!-- 腹部橫紋 -->
+      <path d="M 118 175 Q 160 172, 202 175" fill="none" stroke="#c8a07a" stroke-width="0.7" opacity="0.3"/>
+      <path d="M 115 195 Q 160 192, 205 195" fill="none" stroke="#c8a07a" stroke-width="0.7" opacity="0.3"/>
+
+      <!-- 左臂 (觀者右側) -->
+      <path d="M 90 115 Q 72 118, 65 130 L 40 220 Q 35 235, 38 248 L 44 310 Q 46 320, 50 320 Q 54 320, 56 310 L 62 250 Q 65 238, 72 230 L 88 145 Z"
+            fill="url(#skinGrad)" stroke="#c8956c" stroke-width="1.1"/>
+      <!-- 左手肘摺線 -->
+      <path d="M 44 248 Q 52 244, 60 248" fill="none" stroke="#c8a07a" stroke-width="0.8" opacity="0.5"/>
+      <!-- 左手腕 -->
+      <path d="M 46 308 Q 52 305, 58 308" fill="none" stroke="#c8a07a" stroke-width="0.8" opacity="0.5"/>
+      <!-- 左手掌 -->
+      <path d="M 44 310 Q 40 320, 36 340 Q 34 350, 38 355 Q 42 358, 46 350 L 50 320 Z"
+            fill="url(#skinGrad)" stroke="#c8956c" stroke-width="1"/>
+      <!-- 左手指 -->
+      <line x1="36" y1="340" x2="28" y2="358" stroke="#c8956c" stroke-width="6" stroke-linecap="round"/>
+      <line x1="38" y1="345" x2="32" y2="365" stroke="#c8956c" stroke-width="6" stroke-linecap="round"/>
+      <line x1="42" y1="348" x2="38" y2="370" stroke="#c8956c" stroke-width="6" stroke-linecap="round"/>
+      <line x1="46" y1="350" x2="44" y2="372" stroke="#c8956c" stroke-width="6" stroke-linecap="round"/>
+      <line x1="50" y1="348" x2="52" y2="368" stroke="#c8956c" stroke-width="6" stroke-linecap="round"/>
+
+      <!-- 右臂 -->
+      <path d="M 230 115 Q 248 118, 255 130 L 280 220 Q 285 235, 282 248 L 276 310 Q 274 320, 270 320 Q 266 320, 264 310 L 258 250 Q 255 238, 248 230 L 232 145 Z"
+            fill="url(#skinGrad)" stroke="#c8956c" stroke-width="1.1"/>
+      <!-- 右手肘 -->
+      <path d="M 260 248 Q 268 244, 276 248" fill="none" stroke="#c8a07a" stroke-width="0.8" opacity="0.5"/>
+      <!-- 右手腕 -->
+      <path d="M 262 308 Q 268 305, 274 308" fill="none" stroke="#c8a07a" stroke-width="0.8" opacity="0.5"/>
+      <!-- 右手掌 -->
+      <path d="M 276 310 Q 280 320, 284 340 Q 286 350, 282 355 Q 278 358, 274 350 L 270 320 Z"
+            fill="url(#skinGrad)" stroke="#c8956c" stroke-width="1"/>
+      <!-- 右手指 -->
+      <line x1="284" y1="340" x2="292" y2="358" stroke="#c8956c" stroke-width="6" stroke-linecap="round"/>
+      <line x1="282" y1="345" x2="288" y2="365" stroke="#c8956c" stroke-width="6" stroke-linecap="round"/>
+      <line x1="278" y1="348" x2="282" y2="370" stroke="#c8956c" stroke-width="6" stroke-linecap="round"/>
+      <line x1="274" y1="350" x2="276" y2="372" stroke="#c8956c" stroke-width="6" stroke-linecap="round"/>
+      <line x1="270" y1="348" x2="268" y2="368" stroke="#c8956c" stroke-width="6" stroke-linecap="round"/>
+
+      <!-- 骨盆 -->
+      <path d="M 110 295 Q 130 302, 160 302 Q 190 302, 210 295 L 215 315 Q 195 325, 160 326 Q 125 326, 105 315 Z"
+            fill="url(#skinGrad)" stroke="#c8956c" stroke-width="1.1"/>
+
+      <!-- 左腿 -->
+      <path d="M 105 315 Q 100 320, 95 335 L 82 460 Q 80 475, 82 490 L 86 580 Q 87 595, 93 596 Q 99 596, 101 580 L 106 490 Q 108 475, 110 460 L 118 340 Q 125 325, 120 315 Z"
+            fill="url(#skinGrad)" stroke="#c8956c" stroke-width="1.1"/>
+      <!-- 左膝 -->
+      <ellipse cx="96" cy="462" rx="14" ry="10" fill="#e8c49a" stroke="#c8956c" stroke-width="0.8" opacity="0.7"/>
+      <!-- 左腳踝 -->
+      <path d="M 84 578 Q 93 575, 102 578" fill="none" stroke="#c8a07a" stroke-width="0.8" opacity="0.5"/>
+      <!-- 左腳 -->
+      <path d="M 86 580 Q 80 592, 72 608 Q 68 616, 74 620 Q 80 622, 86 614 L 96 596 L 101 580 Z"
+            fill="url(#skinGrad)" stroke="#c8956c" stroke-width="1"/>
+      <path d="M 72 608 L 64 618" stroke="#c8956c" stroke-width="6" stroke-linecap="round"/>
+      <path d="M 74 612 L 68 624" stroke="#c8956c" stroke-width="5.5" stroke-linecap="round"/>
+      <path d="M 78 616 L 74 628" stroke="#c8956c" stroke-width="5" stroke-linecap="round"/>
+      <path d="M 83 617 L 81 630" stroke="#c8956c" stroke-width="4.5" stroke-linecap="round"/>
+      <path d="M 88 616 L 88 628" stroke="#c8956c" stroke-width="4" stroke-linecap="round"/>
+
+      <!-- 右腿 -->
+      <path d="M 215 315 Q 220 320, 225 335 L 238 460 Q 240 475, 238 490 L 234 580 Q 233 595, 227 596 Q 221 596, 219 580 L 214 490 Q 212 475, 210 460 L 202 340 Q 195 325, 200 315 Z"
+            fill="url(#skinGrad)" stroke="#c8956c" stroke-width="1.1"/>
+      <!-- 右膝 -->
+      <ellipse cx="224" cy="462" rx="14" ry="10" fill="#e8c49a" stroke="#c8956c" stroke-width="0.8" opacity="0.7"/>
+      <!-- 右腳踝 -->
+      <path d="M 218 578 Q 227 575, 236 578" fill="none" stroke="#c8a07a" stroke-width="0.8" opacity="0.5"/>
+      <!-- 右腳 -->
+      <path d="M 234 580 Q 240 592, 248 608 Q 252 616, 246 620 Q 240 622, 234 614 L 224 596 L 219 580 Z"
+            fill="url(#skinGrad)" stroke="#c8956c" stroke-width="1"/>
+      <path d="M 248 608 L 256 618" stroke="#c8956c" stroke-width="6" stroke-linecap="round"/>
+      <path d="M 246 612 L 252 624" stroke="#c8956c" stroke-width="5.5" stroke-linecap="round"/>
+      <path d="M 242 616 L 246 628" stroke="#c8956c" stroke-width="5" stroke-linecap="round"/>
+      <path d="M 237 617 L 239 630" stroke="#c8956c" stroke-width="4.5" stroke-linecap="round"/>
+      <path d="M 232 616 L 232 628" stroke="#c8956c" stroke-width="4" stroke-linecap="round"/>
+
+      <!-- 臉部特徵 -->
+      <!-- 眼睛 -->
+      <ellipse cx="147" cy="46" rx="7" ry="4.5" fill="white" stroke="#9b7040" stroke-width="0.8"/>
+      <ellipse cx="147" cy="46" rx="4" ry="3.5" fill="#5a3010"/>
+      <ellipse cx="173" cy="46" rx="7" ry="4.5" fill="white" stroke="#9b7040" stroke-width="0.8"/>
+      <ellipse cx="173" cy="46" rx="4" ry="3.5" fill="#5a3010"/>
+      <!-- 眉毛 -->
+      <path d="M 140 40 Q 147 37, 154 40" fill="none" stroke="#5a3010" stroke-width="2" stroke-linecap="round"/>
+      <path d="M 166 40 Q 173 37, 180 40" fill="none" stroke="#5a3010" stroke-width="2" stroke-linecap="round"/>
+      <!-- 鼻子 -->
+      <path d="M 160 48 L 158 60 Q 160 63, 162 60 L 160 48" fill="none" stroke="#9b7040" stroke-width="0.8"/>
+      <!-- 嘴巴 -->
+      <path d="M 152 70 Q 160 75, 168 70" fill="none" stroke="#9b7040" stroke-width="1.2" stroke-linecap="round"/>
+      <!-- 耳朵 -->
+      <ellipse cx="126" cy="52" rx="5" ry="8" fill="#e8c49a" stroke="#c8956c" stroke-width="0.8"/>
+      <ellipse cx="194" cy="52" rx="5" ry="8" fill="#e8c49a" stroke="#c8956c" stroke-width="0.8"/>
+      <!-- 頭髮 -->
+      <path d="M 126 20 Q 160 6, 194 20 Q 194 30, 192 35 Q 176 12, 160 10 Q 144 12, 128 35 Q 126 30, 126 20 Z"
+            fill="#3d1c02" stroke="none"/>
+      <path d="M 126 20 Q 128 35, 130 45 Q 126 35, 126 20" fill="#3d1c02"/>
+      <path d="M 194 20 Q 192 35, 190 45 Q 194 35, 194 20" fill="#3d1c02"/>
+    </g>
+
+    <!-- ─── 經脈路徑層 ─── -->
+    <g id="meridianLayer"></g>
+    <!-- ─── 穴道點層 ─── -->
+    <g id="acuLayer"></g>
+  </svg>
+</div>
+```
+
+  </div>
+
+  <!-- 右欄詳細資訊 -->
+
+  <div class="detail" id="detailPanel">
+    <div style="display:flex;align-items:center;justify-content:center;height:100%;opacity:0.4;flex-direction:column;gap:1rem;">
+      <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+        <circle cx="24" cy="24" r="22" stroke="#b8860b" stroke-width="1.5" stroke-dasharray="4 3"/>
+        <path d="M24 12 L24 36 M12 24 L36 24" stroke="#b8860b" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <p style="font-family:'Noto Sans TC';font-size:0.9rem;color:var(--text2);">請從左側選擇經脈</p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ─── 資料庫 ───────────────────────────────────────────────────────────────
+const meridians = [
+  {
+    id: 'lung', key: '肺經', name: '手太陰肺經', type: 'yin',
+    start: '中府穴（前胸第一肋間外側）',
+    end: '少商穴（拇指橈側甲根角旁 0.1 寸）',
+    points: ['中府','雲門','天府','俠白','尺澤','孔最','列缺','經渠','太淵','魚際','少商'],
+    direction: '起於胸部中府穴，沿上臂內側前緣、前臂橈側向下，經手腕太淵，至拇指橈側少商穴',
+    color: '#e05a2b',
+    path: `M 88 128 Q 82 150, 75 180 L 58 260 Q 52 290, 48 320 L 44 350`,
+    acuCoords: [[88,128],[84,152],[80,178],[72,210],[56,260],[52,290],[48,318],[46,332],[44,348]]
+  },
+  {
+    id: 'largeIntestine', key: '大腸經', name: '手陽明大腸經', type: 'yang',
+    start: '商陽穴（食指橈側甲根角旁 0.1 寸）',
+    end: '迎香穴（鼻翼外側緣旁 0.5 寸）',
+    points: ['商陽','二間','三間','合谷','陽溪','偏歷','溫溜','下廉','上廉','手三里','曲池','肘髎','手五里','臂臑','肩髃','巨骨','天鼎','扶突','口禾髎','迎香'],
+    direction: '起於食指商陽穴，沿手臂外側前緣向上，過肩髃、頸部，止於鼻翼旁迎香穴',
+    color: '#2b7be0',
+    path: `M 32 358 L 36 330 Q 40 308, 46 280 L 60 220 Q 68 190, 76 160 L 86 130 Q 100 115, 130 110 L 152 68`,
+    acuCoords: [[32,358],[36,330],[42,308],[48,280],[62,218],[70,188],[78,158],[88,128],[100,113],[130,110],[152,68]]
+  },
+  {
+    id: 'stomach', key: '胃經', name: '足陽明胃經', type: 'yang',
+    start: '承泣穴（眼球正下方）',
+    end: '厲兌穴（第二趾外側甲根角旁 0.1 寸）',
+    points: ['承泣','四白','巨髎','地倉','頰車','下關','頭維','人迎','水突','氣舍','缺盆','氣戶','庫房','屋翳','膺窗','乳中','乳根','不容','承滿','梁門','關門','太乙','滑肉門','天樞','外陵','大巨','水道','歸來','氣衝','髀關','伏兔','陰市','梁丘','犢鼻','足三里','上巨虛','條口','下巨虛','豐隆','解溪','衝陽','陷谷','內庭','厲兌'],
+    direction: '起於眼下承泣穴，沿臉頰、頸側、胸腹正旁側向下，沿大腿前外側、小腿前側至第二趾厲兌穴',
+    color: '#e08a2b',
+    path: `M 148 50 Q 140 58, 132 72 L 122 108 L 118 150 L 116 200 L 114 250 L 112 300 L 110 360 L 108 420 L 106 470 L 102 540 L 96 610`,
+    acuCoords: [[148,50],[140,58],[132,72],[122,108],[118,150],[116,200],[112,300],[110,360],[108,420],[106,470],[102,540],[96,610]]
+  },
+  {
+    id: 'spleen', key: '脾經', name: '足太陰脾經', type: 'yin',
+    start: '隱白穴（足大趾內側甲根角旁 0.1 寸）',
+    end: '大包穴（腋中線第六肋間隙）',
+    points: ['隱白','大都','太白','公孫','商丘','三陰交','漏谷','地機','陰陵泉','血海','箕門','衝門','府舍','腹結','大橫','腹哀','食竇','天溪','胸鄉','周榮','大包'],
+    direction: '起於足大趾隱白穴，沿足內側、小腿和大腿內側前緣向上，過腹部、胸部，止於腋下大包穴',
+    color: '#d44b9a',
+    path: `M 138 620 L 138 560 L 136 500 L 132 460 L 126 400 L 122 340 L 118 280 L 116 220 L 114 170 L 112 130 Q 108 118, 100 112`,
+    acuCoords: [[138,620],[138,560],[136,500],[132,460],[126,400],[122,340],[118,280],[116,220],[114,170],[112,130],[100,112]]
+  },
+  {
+    id: 'heart', key: '心經', name: '手少陰心經', type: 'yin',
+    start: '極泉穴（腋窩正中）',
+    end: '少衝穴（小指橈側甲根角旁 0.1 寸）',
+    points: ['極泉','青靈','少海','靈道','通里','陰郄','神門','少府','少衝'],
+    direction: '起於腋窩極泉穴，沿上臂內側後緣向下，過肘、腕，止於小指橈側少衝穴',
+    color: '#c0392b',
+    path: `M 92 118 Q 80 130, 72 150 L 60 200 Q 56 230, 54 260 L 50 300 L 46 330 L 42 358`,
+    acuCoords: [[92,118],[80,130],[72,150],[60,200],[56,230],[52,260],[50,300],[46,330],[42,356]]
+  },
+  {
+    id: 'smallIntestine', key: '小腸經', name: '手太陽小腸經', type: 'yang',
+    start: '少澤穴（小指尺側甲根角旁 0.1 寸）',
+    end: '聽宮穴（耳屏前方，下頜骨髁狀突後緣）',
+    points: ['少澤','前谷','後溪','腕骨','陽谷','養老','支正','小海','肩貞','臑俞','天宗','秉風','曲垣','肩外俞','肩中俞','天窗','天容','顴髎','聽宮'],
+    direction: '起於小指尺側少澤穴，沿手背、前臂外後側、上臂後側向上，繞肩胛，經頸側，止於耳前聽宮穴',
+    color: '#e07a2b',
+    path: `M 32 356 L 36 320 L 44 280 L 56 240 Q 66 210, 80 185 L 102 148 Q 116 126, 132 118 L 158 74 Q 168 56, 174 50`,
+    acuCoords: [[32,356],[36,320],[44,278],[58,238],[68,208],[82,184],[104,146],[134,116],[160,72],[176,50]]
+  },
+  {
+    id: 'bladder', key: '膀胱經', name: '足太陽膀胱經', type: 'yang',
+    start: '睛明穴（目內眥旁 0.1 寸）',
+    end: '至陰穴（足小趾外側甲根角旁 0.1 寸）',
+    points: ['睛明','攢竹','眉衝','曲差','五處','承光','通天','絡卻','玉枕','天柱','大杼','風門','肺俞','厥陰俞','心俞','督俞','膈俞','肝俞','膽俞','脾俞','胃俞','三焦俞','腎俞','氣海俞','大腸俞','關元俞','小腸俞','膀胱俞','中膂俞','白環俞','上髎','次髎','中髎','下髎','會陽','承扶','殷門','浮郄','委陽','委中','附分','魄戶','膏肓','神堂','譩譆','膈關','魂門','陽綱','意舍','胃倉','肓門','志室','胞肓','秩邊','合陽','承筋','承山','飛揚','跗陽','崑崙','僕參','申脈','金門','京骨','束骨','足通谷','至陰'],
+    direction: '從眼內角起，過頭頂、後頸，沿脊柱兩旁下行，過臀、大腿後側、小腿後側，止於足小趾至陰穴',
+    color: '#1a5fb4',
+    path: `M 154 48 Q 158 32, 160 18 L 160 16 Q 162 14, 164 16 L 164 18 Q 170 40, 166 50 L 166 100 L 168 160 L 170 220 L 172 280 L 174 340 L 178 400 L 182 460 L 184 520 L 186 580 L 188 620`,
+    acuCoords: [[154,48],[160,16],[166,50],[166,100],[168,160],[170,220],[172,280],[174,340],[178,400],[182,460],[184,520],[186,580],[188,620]]
+  },
+  {
+    id: 'kidney', key: '腎經', name: '足少陰腎經', type: 'yin',
+    start: '湧泉穴（足底前 1/3 凹陷中）',
+    end: '俞府穴（鎖骨下緣第一肋間隙）',
+    points: ['湧泉','然谷','太溪','大鐘','水泉','照海','復溜','交信','築賓','陰谷','橫骨','大赫','氣穴','四滿','中注','肓俞','商曲','石關','陰都','腹通谷','幽門','步廊','神封','靈墟','神藏','彧中','俞府'],
+    direction: '從足底湧泉穴，過足跟，沿腿內側後緣向上，過腹部正旁，止於鎖骨下俞府穴',
+    color: '#1a8fa4',
+    path: `M 144 632 L 144 580 L 140 520 L 136 460 L 130 400 L 126 340 L 122 280 L 120 220 L 118 160 L 116 120 Q 115 112, 118 108`,
+    acuCoords: [[144,632],[144,580],[140,520],[136,460],[130,400],[126,340],[122,280],[120,220],[118,160],[116,120],[118,108]]
+  },
+  {
+    id: 'pericardium', key: '心包經', name: '手厥陰心包經', type: 'yin',
+    start: '天池穴（乳頭外 1 寸第四肋間）',
+    end: '中衝穴（中指甲根角旁 0.1 寸）',
+    points: ['天池','天泉','曲澤','郄門','間使','內關','大陵','勞宮','中衝'],
+    direction: '起於胸部天池穴，沿上臂內側中線向下，止於中指甲根中衝穴',
+    color: '#9b2b9b',
+    path: `M 96 148 Q 88 162, 80 190 L 68 240 Q 62 270, 58 305 L 54 340 L 50 358`,
+    acuCoords: [[96,148],[88,162],[80,190],[68,240],[62,270],[58,306],[54,340],[50,358]]
+  },
+  {
+    id: 'tripleEnergizer', key: '三焦經', name: '手少陽三焦經', type: 'yang',
+    start: '關衝穴（無名指尺側甲根角旁 0.1 寸）',
+    end: '絲竹空穴（眉梢凹陷中）',
+    points: ['關衝','液門','中渚','陽池','外關','支溝','會宗','三陽絡','四瀆','天井','清冷淵','消濼','臑會','肩髎','天髎','天牖','翳風','瘈脈','顱息','角孫','耳門','耳和髎','絲竹空'],
+    direction: '起於無名指尺側關衝穴，沿手背、前臂外側中線，繞肩胛，過頸側、耳後，止於眉梢絲竹空穴',
+    color: '#2ba67b',
+    path: `M 288 366 L 280 330 L 272 290 L 264 250 Q 258 220, 252 195 L 240 160 Q 230 140, 220 128 L 204 120 Q 186 114, 170 50`,
+    acuCoords: [[288,366],[280,330],[272,290],[264,250],[258,220],[252,194],[240,160],[228,138],[218,128],[204,120],[186,112],[170,50]]
+  },
+  {
+    id: 'gallbladder', key: '膽經', name: '足少陽膽經', type: 'yang',
+    start: '瞳子髎穴（目外眥旁 0.5 寸）',
+    end: '足竅陰穴（第四趾外側甲根角旁 0.1 寸）',
+    points: ['瞳子髎','聽會','上關','頷厭','懸顱','懸釐','曲鬢','率谷','天衝','浮白','頭竅陰','完骨','本神','陽白','頭臨泣','目窗','正營','承靈','腦空','風池','肩井','淵腋','輒筋','日月','京門','帶脈','五樞','維道','居髎','環跳','風市','中瀆','膝陽關','陽陵泉','陽交','外丘','光明','陽輔','懸鐘','丘墟','足臨泣','地五會','俠溪','足竅陰'],
+    direction: '起於目外眥瞳子髎穴，蜿蜒頭側，過頸側、腋側、身體側面，沿腿外側，止於第四趾足竅陰穴',
+    color: '#5a8a1a',
+    path: `M 172 48 Q 185 42, 194 50 L 192 80 Q 185 100, 188 120 L 192 160 Q 195 185, 200 200 L 208 260 L 212 320 L 218 380 L 222 440 L 226 500 L 228 560 L 230 620`,
+    acuCoords: [[172,48],[194,50],[192,80],[188,120],[192,160],[196,184],[200,200],[208,260],[212,320],[218,380],[222,440],[226,500],[228,560],[230,620]]
+  },
+  {
+    id: 'liver', key: '肝經', name: '足厥陰肝經', type: 'yin',
+    start: '大敦穴（足大趾外側甲根角旁 0.1 寸）',
+    end: '期門穴（乳頭正下方第六肋間隙）',
+    points: ['大敦','行間','太衝','中封','蠡溝','中都','膝關','曲泉','陰包','足五里','陰廉','急脈','章門','期門'],
+    direction: '起於足大趾大敦穴，沿足背、腿內側中線向上，過膝、腹，止於乳頭下方期門穴',
+    color: '#1a7a3a',
+    path: `M 134 622 L 132 570 L 130 510 L 128 460 L 126 410 L 124 360 L 122 310 L 120 260 L 118 210 L 116 165 Q 114 148, 112 138`,
+    acuCoords: [[134,622],[132,570],[130,510],[128,460],[126,410],[124,360],[122,310],[120,260],[118,210],[116,165],[112,138]]
+  },
+  {
+    id: 'du', key: '督脈', name: '督脈', type: 'qi',
+    start: '長強穴（尾骨尖端下方）',
+    end: '齦交穴（上唇繫帶與上牙齦交界處）',
+    points: ['長強','腰俞','腰陽關','命門','懸樞','脊中','中樞','筋縮','至陽','靈台','神道','身柱','陶道','大椎','啞門','風府','腦戶','強間','後頂','百會','前頂','囟會','上星','神庭','素髎','水溝','兌端','齦交'],
+    direction: '沿脊柱後正中線從尾骨長強穴上行，過頭頂百會，沿正中線下至上唇齦交穴',
+    color: '#8b008b',
+    path: `M 160 640 L 160 580 L 160 520 L 160 460 L 160 400 L 160 340 L 160 280 L 160 220 L 160 160 L 160 100 L 160 50 L 160 25`,
+    acuCoords: [[160,640],[160,580],[160,520],[160,460],[160,400],[160,340],[160,280],[160,220],[160,160],[160,100],[160,50],[160,25]]
+  },
+  {
+    id: 'ren', key: '任脈', name: '任脈', type: 'qi',
+    start: '會陰穴（前後二陰之間）',
+    end: '承漿穴（頦唇溝正中凹陷）',
+    points: ['會陰','曲骨','中極','關元','石門','氣海','陰交','神闕','水分','下脘','建里','中脘','上脘','巨闕','鳩尾','中庭','膻中','玉堂','紫宮','華蓋','璇璣','天突','廉泉','承漿'],
+    direction: '沿腹部前正中線從會陰穴上行，過臍、胸、喉，止於下唇承漿穴',
+    color: '#00008b',
+    path: `M 160 300 L 160 280 L 160 250 L 160 220 L 160 190 L 160 165 L 160 140 L 160 120 L 160 100 L 160 80 L 160 65`,
+    acuCoords: [[160,300],[160,280],[160,250],[160,220],[160,190],[160,165],[160,140],[160,120],[160,100],[160,80],[160,65]]
+  }
+];
+
+// ─── 側欄建構 ─────────────────────────────────────────────────────────────
+const groups = [
+  { label: '手臂三陰經', keys: ['肺經','心經','心包經'] },
+  { label: '手臂三陽經', keys: ['大腸經','小腸經','三焦經'] },
+  { label: '足部三陰經', keys: ['脾經','腎經','肝經'] },
+  { label: '足部三陽經', keys: ['胃經','膀胱經','膽經'] },
+  { label: '奇經（任督）', keys: ['督脈','任脈'] }
+];
+
+const sidebar = document.getElementById('sidebar');
+const byKey = {};
+meridians.forEach(m => byKey[m.key] = m);
+
+groups.forEach(g => {
+  const lbl = document.createElement('div');
+  lbl.className = 'group-label';
+  lbl.textContent = g.label;
+  sidebar.appendChild(lbl);
+  g.keys.forEach(k => {
+    const m = byKey[k];
+    const btn = document.createElement('button');
+    btn.className = 'm-btn';
+    btn.dataset.key = k;
+    const badgeClass = m.type === 'yin' ? 'yin' : m.type === 'yang' ? 'yang' : 'qi';
+    const typeLabel = m.type === 'yin' ? '陰經' : m.type === 'yang' ? '陽經' : '奇經';
+    btn.innerHTML = `
+      <span class="m-dot" style="background:${m.color};"></span>
+      <div>
+        <div class="m-name">${m.name}</div>
+        <div class="m-sub">${typeLabel}</div>
+      </div>`;
+    btn.addEventListener('click', () => selectMeridian(k));
+    sidebar.appendChild(btn);
+  });
+});
+
+// ─── 選擇經脈 ─────────────────────────────────────────────────────────────
+function selectMeridian(key) {
+  const m = byKey[key];
+  // 更新按鈕狀態
+  document.querySelectorAll('.m-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`.m-btn[data-key="${key}"]`).classList.add('active');
+
+  // 繪製路徑
+  const layer = document.getElementById('meridianLayer');
+  const acuLayer = document.getElementById('acuLayer');
+  layer.innerHTML = '';
+  acuLayer.innerHTML = '';
+
+  // 發光底層
+  const glow = document.createElementNS('http://www.w3.org/2000/svg','path');
+  glow.setAttribute('d', m.path);
+  glow.setAttribute('stroke', m.color);
+  glow.setAttribute('stroke-width', '8');
+  glow.setAttribute('fill', 'none');
+  glow.setAttribute('opacity', '0.18');
+  glow.setAttribute('stroke-linecap', 'round');
+  glow.setAttribute('stroke-linejoin', 'round');
+  layer.appendChild(glow);
+
+  // 主線
+  const line = document.createElementNS('http://www.w3.org/2000/svg','path');
+  line.setAttribute('d', m.path);
+  line.setAttribute('stroke', m.color);
+  line.setAttribute('stroke-width', '2.8');
+  line.setAttribute('fill', 'none');
+  line.setAttribute('opacity', '0.92');
+  line.setAttribute('stroke-linecap', 'round');
+  line.setAttribute('stroke-linejoin', 'round');
+  line.setAttribute('class', 'meridian-line');
+  layer.appendChild(line);
+
+  // 穴道點
+  m.acuCoords.forEach(([cx,cy], i) => {
+    const outer = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    outer.setAttribute('cx', cx);
+    outer.setAttribute('cy', cy);
+    outer.setAttribute('r', 6);
+    outer.setAttribute('fill', m.color);
+    outer.setAttribute('opacity', '0.15');
+    acuLayer.appendChild(outer);
+
+    const inner = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    inner.setAttribute('cx', cx);
+    inner.setAttribute('cy', cy);
+    inner.setAttribute('r', 3.5);
+    inner.setAttribute('fill', m.color);
+    inner.setAttribute('class', 'acu-pulse');
+    inner.style.animationDelay = `${i * 0.12}s`;
+    acuLayer.appendChild(inner);
+  });
+
+  // 更新詳細面板
+  const badgeClass = m.type === 'yin' ? 'yin' : m.type === 'yang' ? 'yang' : 'qi';
+  const typeLabel = m.type === 'yin' ? '陰經' : m.type === 'yang' ? '陽經' : '奇經';
+  const tagsHtml = m.points.map(p => `<span class="acu-tag">${p}</span>`).join('');
+
+  document.getElementById('detailPanel').innerHTML = `
+    <div class="detail-head">
+      <h2>${m.name}</h2>
+      <span class="badge ${badgeClass}">${typeLabel}</span>
+    </div>
+    <div class="info-row">
+      <div class="lbl">起點穴道</div>
+      <div class="val">${m.start}</div>
+    </div>
+    <div class="info-row">
+      <div class="lbl">終點穴道</div>
+      <div class="val">${m.end}</div>
+    </div>
+    <div class="info-row">
+      <div class="lbl">走向說明</div>
+      <div class="val">${m.direction}</div>
+    </div>
+    <div class="info-row">
+      <div class="lbl">穴道列表（共 ${m.points.length} 穴）</div>
+      <div class="acupoints-grid">${tagsHtml}</div>
+    </div>`;
+}
+
+// 預設選擇肺經
+selectMeridian('肺經');
+</script>
+
+</body>
+</html>
